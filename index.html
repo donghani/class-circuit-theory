@@ -1,87 +1,1029 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Class Automatic Control</title>
-    <style>
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        line-height: 1.6;
-        margin: 20px;
-        color: #333;
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회로이론 (Circuit Theory) | 경희대학교</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Modern Reset & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-dark: #090d16;
+      --bg-card: rgba(15, 23, 42, 0.7);
+      --bg-card-hover: rgba(15, 23, 42, 0.95);
+      --border-color: rgba(255, 255, 255, 0.06);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #06b6d4; /* Cyan */
+      --primary-glow: rgba(6, 182, 212, 0.15);
+      --secondary: #10b981; /* Emerald */
+      --secondary-glow: rgba(16, 185, 129, 0.15);
+      --accent: #0ea5e9; /* Sky Blue */
+      --font-outfit: 'Outfit', 'Noto Sans KR', sans-serif;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Noto Sans KR', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(6, 182, 212, 0.05) 0%, transparent 45%),
+        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 45%);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    /* Header Section */
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+      position: relative;
+    }
+
+    .university-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(6, 182, 212, 0.08);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--primary);
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    h1 {
+      font-family: var(--font-outfit);
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 30%, var(--primary) 70%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .header-subtitle {
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      max-width: 700px;
+      margin: 0 auto;
+      font-weight: 300;
+    }
+
+    /* Banner Illustration */
+    .banner-container {
+      margin-bottom: 50px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
+      background: rgba(9, 13, 22, 0.6);
+      backdrop-filter: blur(10px);
+    }
+
+    .banner-container img {
+      width: 100%;
+      height: auto;
+      max-height: 400px;
+      object-fit: cover;
+      display: block;
+      transition: var(--transition);
+      opacity: 0.85;
+    }
+
+    .banner-container:hover img {
+      transform: scale(1.015);
+      opacity: 0.95;
+    }
+
+    /* Navigation Tabs */
+    .tabs-nav {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 15px;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      font-weight: 500;
+      padding: 12px 24px;
+      cursor: pointer;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      background: rgba(6, 182, 212, 0.08);
+      box-shadow: inset 0 0 0 1px rgba(6, 182, 212, 0.25);
+    }
+
+    /* Tab Content panels */
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Search & Filter bar */
+    .search-wrapper {
+      margin-bottom: 30px;
+      position: relative;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .search-input {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--border-color);
+      padding: 14px 20px 14px 50px;
+      border-radius: 14px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px var(--primary-glow);
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+      transition: var(--transition);
+    }
+
+    .search-input:focus + .search-icon {
+      color: var(--primary);
+    }
+
+    /* Part Sections */
+    .part-section {
+      margin-bottom: 50px;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    .section-title.part1 { color: #38bdf8; }
+    .section-title.part2 { color: #22d3ee; }
+    .section-title.part3 { color: #34d399; }
+    .section-title.part4 { color: #a78bfa; }
+
+    /* Grid Layouts */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 25px;
+    }
+
+    /* Lecture Card */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      background: var(--bg-card-hover);
+      border-color: rgba(6, 182, 212, 0.2);
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.4), 0 0 20px 0 var(--primary-glow);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .chapter-badge {
+      font-family: var(--font-outfit);
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 4px 10px;
+      border-radius: 8px;
+      color: var(--text-muted);
+    }
+
+    .card:hover .chapter-badge {
+      color: var(--primary);
+      background: rgba(6, 182, 212, 0.1);
+      border-color: rgba(6, 182, 212, 0.2);
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 300;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+
+    .card-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .card-btn:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #000;
+      box-shadow: 0 10px 20px -5px rgba(6, 182, 212, 0.4);
+    }
+
+    /* Course Info / Professor Tab */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    @media (min-width: 900px) {
+      .info-grid {
+        grid-template-columns: 1.2fr 1.8fr;
       }
-      h1 {
-        border-bottom: 2px solid #eee;
-        padding-bottom: 5px;
-      }
-      ul {
-        list-style-type: disc;
-        margin-bottom: 10px;
-      }
-      ul ul {
-        list-style-type: circle;
-        margin-top: 5px;
-      }
-      a {
-        color: #0366d6;
-        text-decoration: none;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
-    </style>
-  </head>
-  <body>
-    <div style="display: flex; margin-bottom: 20px; justify-content: center;">
-      <img src="concept1.png" alt="Circuit Theory Concept 1" style="width: 100%; max-width: 1000px; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    }
+
+    .profile-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .avatar-wrapper {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 20px auto;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 10px 25px rgba(6, 182, 212, 0.2);
+    }
+
+    .prof-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .prof-title {
+      color: var(--primary);
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 25px;
+    }
+
+    .prof-info-list {
+      text-align: left;
+      list-style: none;
+    }
+
+    .prof-info-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .prof-info-list li:last-child {
+      border: none;
+    }
+
+    .prof-info-list li i {
+      color: var(--primary);
+    }
+
+    .details-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 30px;
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .detail-item h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .detail-item h3 i {
+      color: var(--secondary);
+    }
+
+    .detail-item p {
+      color: var(--text-muted);
+      font-weight: 300;
+      font-size: 0.95rem;
+    }
+
+    /* Textbook sub-card */
+    .textbook-box {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 10px;
+    }
+
+    .textbook-img-wrapper {
+      flex-shrink: 0;
+    }
+
+    .textbook-img {
+      width: 90px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: block;
+    }
+
+    /* YouTube Card */
+    .youtube-banner {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(9, 13, 22, 0.8) 100%);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .youtube-banner-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .youtube-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #ef4444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .yt-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fca5a5;
+    }
+
+    .yt-link {
+      align-self: flex-start;
+      background: #ef4444;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .yt-link:hover {
+      background: #ef4444;
+      box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 80px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 300;
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="university-badge">
+        <i data-lucide="zap" style="width: 16px; height: 16px;"></i>
+        Kyung Hee University
+      </div>
+      <h1>회로이론</h1>
+      <p class="header-subtitle">전자공학과 김동한 교수님의 회로이론(Circuit Theory) 주차별 강의 자료 보관소</p>
+    </header>
+
+    <!-- Concept Illustration Banner -->
+    <div class="banner-container">
+      <img src="concept1.png" alt="Circuit Theory Concept Illustration">
     </div>
-    <h1>소개</h1>
-    <ul>
-      <li>
-        <strong>강사</strong>
-        <ul>
-          <li>전자공학과 김동한 교수 (전자정보대학 609호, 내선번호 3831)</li>
-          <li>donghani@khu.ac.kr</li>
-          <li>상담시간: 수업 후 1시간</li>
-        </ul>
-      </li>
-      <li>
-        <strong>교과서</strong>
-        <ul>
-          <li>
-            회로이론 12판 (저자: J. David Irwin , R. Mark Nelms)
-          </li>
-          <li>보조자료: 인터넷 활용 (Google, Youtube)</li>
-        </ul>
-      </li>
-      <li>
-        <strong>강의자료</strong>
-        <ul>
-          <li>
-            <a href="https://e-campus.khu.ac.kr">https://e-campus.khu.ac.kr</a>
-            에 pdf로 업로드함
-          </li>
-          <li>
-            <a href="https://github.com/donghani/class-circuit-theory/"
-              >https://github.com/donghani/class-circuit-theory/</a
-            >
-            에도 업로드함
-          </li>
-        </ul>
-      </li>
-      <li>
-        <strong
-          >강의영상 녹화본은 youtube에 업로드함 (경희대 김동한으로 검색)</strong
-        >
-        <ul>
-          <li>
-            <a href="https://www.youtube.com/channel/UCT_h-5YhlC0t9LEdVckdrXQ"
-              >https://www.youtube.com/channel/UCT_h-5YhlC0t9LEdVckdrXQ</a
-            >
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </body>
+
+    <!-- Tabs Navigation -->
+    <nav class="tabs-nav">
+      <button class="tab-btn active" onclick="switchTab('lectures')">
+        <i data-lucide="book-open" style="width: 18px; height: 18px;"></i>
+        강의 자료 (PDF)
+      </button>
+      <button class="tab-btn" onclick="switchTab('info')">
+        <i data-lucide="info" style="width: 18px; height: 18px;"></i>
+        교수 및 과목 정보
+      </button>
+    </nav>
+
+    <!-- TAB 1: Lectures -->
+    <div id="lectures" class="tab-panel active">
+      <!-- Search Input -->
+      <div class="search-wrapper">
+        <input type="text" id="lectureSearch" class="search-input" placeholder="회로 법칙, 정리, 소자명 또는 챕터 검색..." oninput="filterLectures()">
+        <i data-lucide="search" class="search-icon" style="width: 20px; height: 20px;"></i>
+      </div>
+
+      <!-- Part 1: 회로의 기초 -->
+      <section class="part-section">
+        <h2 class="section-title part1">
+          <i data-lucide="activity"></i>
+          Part 1. 회로 해석의 기초 (Basic Concepts & Laws)
+        </h2>
+        <div class="cards-grid" id="part1Grid">
+          <div class="card" data-title="chapter 1 기본 개념 기본개념 전하 전압 전류 전력 에너지">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 01</span></div>
+              <h3 class="card-title">Chapter 1. 기본 개념</h3>
+              <p class="card-desc">전기 회로의 정의, 전하(Charge), 전류(Current), 전압(Voltage), 에너지 및 순시 전력(Power)의 물리적 정의와 단위계.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter1%20%EA%B8%B0%EB%B3%B8%EA%B0%9C%EB%85%90.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+
+          <div class="card" data-title="chapter 2-1 옴의 법칙 옴의법칙 저항 소자 psc 수동소자">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 02-1</span></div>
+              <h3 class="card-title">Chapter 2-1. 옴의 법칙</h3>
+              <p class="card-desc">저항(Resistance)의 정의, 컨덕턴스 및 전압과 전류의 선형 비례 관계를 다룬 옴의 법칙(Ohm's Law)과 수동소자 규약.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter2-1%20%EC%98%B5%EC%9D%98_%EB%B2%95%EC%B9%99.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+
+          <div class="card" data-title="chapter 2-2 키르히호프 법칙 KCL KVL 루프 노드 마디">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 02-2</span></div>
+              <h3 class="card-title">Chapter 2-2. 키르히호프 법칙</h3>
+              <p class="card-desc">회로 해석의 근본인 키르히호프 전류 법칙(KCL)과 키르히호프 전압 법칙(KVL)의 물리적 정의 및 마디/루프 분석.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter2-2%20%ED%82%A4%EB%A5%B4%ED%9E%88%ED%98%B8%ED%94%84%20%EB%B2%95%EC%B9%99.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+
+          <div class="card" data-title="chapter 2-3 single loop 단일 루프 직렬 분압 전압 분배">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 02-3</span></div>
+              <h3 class="card-title">Chapter 2-3. Single Loop</h3>
+              <p class="card-desc">단일 루프로 이루어진 직렬 회로의 전류 계산 및 소자별 분배 전압을 고속으로 계산하는 전압 분배 법칙(Voltage Division).</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter2-3%20Single%20Loop.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+
+          <div class="card" data-title="chapter 2-4 single node pair 단일 노드 마디 병렬 분류 전류 분배">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 02-4</span></div>
+              <h3 class="card-title">Chapter 2-4. Single Node Pair</h3>
+              <p class="card-desc">단일 마디 쌍으로 이루어진 병렬 회로의 마디 전압 해석 및 각 지로의 분배 전류를 구하는 전류 분배 법칙(Current Division).</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter2-4%20Single%20Node%20Pair.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+
+          <div class="card" data-title="chapter 2-5 2-6 2-7 ser delta-wye 직병렬 델타 와이 합성 저항 등가">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 02-5,6,7</span></div>
+              <h3 class="card-title">Chapter 2-5~7. 직병렬 & Delta-Wye</h3>
+              <p class="card-desc">저항의 직렬 및 병렬 등가 합성법과 브릿지 회로 간소화를 위한 델타-와이($\Delta\text{-Y}$) 상호 등가 변환식 유도와 분석.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter2-5,%202-6%202-7%20SER_Delta-Wye.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+
+          <div class="card" data-title="chapter 2-8 circuits with dependent sources 종속 전원 종속전원 능동 소자">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 02-8</span></div>
+              <h3 class="card-title">Chapter 2-8. 종속 전원 회로</h3>
+              <p class="card-desc">제어 변수에 따라 전압/전류가 결정되는 종속 전원(Dependent Sources)을 포함한 회로망의 KCL/KVL 확장 분석.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter2-8%20Circuits%20with%20Dependent%20Sources.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Part 2: 핵심 해석 기법 -->
+      <section class="part-section">
+        <h2 class="section-title part2">
+          <i data-lucide="git-branch"></i>
+          Part 2. 핵심 회로 해석 기법 (Circuit Analysis Techniques)
+        </h2>
+        <div class="cards-grid" id="part2Grid">
+          <div class="card" data-title="chapter 3-1 node analysis 마디 해석법 노드 해석 KCL 연립방정식">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 03-1</span></div>
+              <h3 class="card-title">Chapter 3-1. 마디 해석법 (Node)</h3>
+              <p class="card-desc">독립 마디 전압을 변수로 설정하여 KCL 연립 행렬 방정식을 조립하는 최고 효율의 회로망 체계적 해석 기법.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter3-1%20Node%20Analysis.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+
+          <div class="card" data-title="chapter 3-2 loop analysis 망로 해석법 루프 해석 KVL mesh 메쉬">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 03-2</span></div>
+              <h3 class="card-title">Chapter 3-2. 망로 해석법 (Loop)</h3>
+              <p class="card-desc">망로 전류(Mesh Current)를 독립 변수로 조립하여 KVL 방정식을 세우는 해석 이론과 슈퍼망로(Supermesh) 해석.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter3-2%20Loop%20Analysis.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+
+          <div class="card" data-title="chapter 3-3 3-4 linearity superposition 선형성 중첩의 원리 중첩의원리 독립 전원">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 03-3,4</span></div>
+              <h3 class="card-title">Chapter 3-3~4. 선형성 & 중첩</h3>
+              <p class="card-desc">선형 소자 회로의 비례/가산적 특성을 증명하고, 다중 전원이 섞여 있을 때 각각 전원을 독립 처리하는 중첩의 원리.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter3-3,%203-4%20Linearity%20%26%20Superposition.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+
+          <div class="card" data-title="chapter 3-5 3-6 thevenin norton maximum power transfer 테브난 노턴 최대 전력 전달 등가 저항">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 03-5,6</span></div>
+              <h3 class="card-title">Chapter 3-5~6. 테브난 & 노턴</h3>
+              <p class="card-desc">임의의 복잡 선형 일포트 회로를 등가 전압원/전류원과 등가 저항으로 축소하는 핵심 정리 및 최대 부하 전력 전송 정합 조건.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter3-5,%203-6%20Thevenin%20%26%20Norton%20and%20Maximum%20Power%20Transfer.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+
+          <div class="card" data-title="chapter 3-7 3-8 3-9 reciprocity compensation millman theorem 가역 보상 밀만 회로망 정리">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 03-7,8,9</span></div>
+              <h3 class="card-title">Chapter 3-7~9. 회로망 정리</h3>
+              <p class="card-desc">신호 전송 가역성(Reciprocity), 소자 변경 효과를 등가 전원으로 대체하는 보상(Compensation), 다중 병렬 전원 요약 밀만의 정리.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter3-7,%203-8,%203-9%20Reciprocity,%20Compensation%20and%20Millman's%20Theorem.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+
+          <div class="card" data-title="chapter 3-10 3-11 application design examples 실무 응용 설계 오차 분석 전력 배분">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 03-10,11</span></div>
+              <h3 class="card-title">Chapter 3-10~11. 설계 및 응용</h3>
+              <p class="card-desc">테브난 노턴 법칙 및 회로 해석 기술을 계측기 내부 오차율 연산 및 배터리 시스템 설계 등 실무 회로에 적용하는 솔루션.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter3-10%20Application%20Examples.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px; margin-right: 4px;"></i>
+                적용 예시 PDF
+              </a>
+              <a class="card-btn" href="./Chapter3-11%20Design%20Examples.pdf" download style="margin-top: 6px;">
+                <i data-lucide="download" style="width: 14px; height: 14px; margin-right: 4px;"></i>
+                설계 예시 PDF
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Part 3: 동적 소자 & 과도상태 -->
+      <section class="part-section">
+        <h2 class="section-title part3">
+          <i data-lucide="sliders"></i>
+          Part 3. 과도 상태 및 동적 회로 (Storage Elements & Transient Response)
+        </h2>
+        <div class="cards-grid" id="part3Grid">
+          <div class="card" data-title="chapter 5 capacitance inductance 커패시터 인덕터 에너지 축적 콘덴서 코일 직병렬">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 05</span></div>
+              <h3 class="card-title">Chapter 5. 커패시터와 인덕터</h3>
+              <p class="card-desc">에너지를 축적하는 리액티브 동적 소자인 커패시터($C$, 전계)와 인덕터($L$, 자계)의 V-I 관계 공식 및 합성 등가값 계산.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter5%20capacitance%20and%20Inductance.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+
+          <div class="card" data-title="chapter 6-1 intro first order diff equation RC RL 1차 회로 미분방정식 시정수 과도 응답">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 06-1</span></div>
+              <h3 class="card-title">Chapter 6-1. 1차 과도 회로 개론</h3>
+              <p class="card-desc">1차 미분방정식 유도를 통한 RC, RL 회로의 고유 응답 및 스텝(Step) 입력 시의 시간 상수($\tau$)와 응답 파형 유도.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter6-1%20Intro%20First%20Order%20Diff%20Equation.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px; margin-right: 4px;"></i>
+                기본형 PDF
+              </a>
+              <a class="card-btn" href="./Chapter6-1%20Intro%20First%20Order%20Diff%20Equation-updated.pdf" download style="margin-top: 6px;">
+                <i data-lucide="download" style="width: 14px; height: 14px; margin-right: 4px;"></i>
+                업데이트판 PDF
+              </a>
+            </div>
+          </div>
+
+          <div class="card" data-title="chapter 6-2 step by step pulse 스텝 바이 스텝 펄스 응답 시간 간격 초기치 연속 조건">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 06-2</span></div>
+              <h3 class="card-title">Chapter 6-2. 스텝-바이-스텝 펄스</h3>
+              <p class="card-desc">시간 구간 별 스위칭 및 사각 펄스 입력 시 $0^-$와 $0^+$의 에너지 보존 연속 조건을 적용해 수작업으로 과도 응답식을 얻는 기법.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter6-2%20Step%20by%20Step%20Pulse.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+
+          <div class="card" data-title="chapter 6-3 second order circuits RLC 2차 회로 2차 미분방정식 제동 과제동 부족제동 임계제동">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 06-3</span></div>
+              <h3 class="card-title">Chapter 6-3. 2차 과도 RLC 회로</h3>
+              <p class="card-desc">2차 상미분방정식을 모델링하고, 감쇄상수($\alpha$)와 고유각진동수($\omega_0$)를 구해 과/부족/임계 제동 상태 파형 공식 해석.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter6-3%20Second%20order%20Circuits.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+
+          <div class="card" data-title="chapter 6-4 design applications transient 과도 상태 스위칭 발진 필터 타이머">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 06-4</span></div>
+              <h3 class="card-title">Chapter 6-4. 과도 회로 설계 응용</h3>
+              <p class="card-desc">RLC 소자의 시정수 특성을 조절하여 아날로그 회로 지연 타이머 설계 및 전압 서지 서프레서 회로 설계 분석.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter6-4%20Desgin%20and%20Applications.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Part 4: 교류 및 전력 -->
+      <section class="part-section">
+        <h2 class="section-title part4">
+          <i data-lucide="shuffle"></i>
+          Part 4. 교류 및 전력 (AC Sinusoidal Steady-State)
+        </h2>
+        <div class="cards-grid" id="part4Grid">
+          <div class="card" data-title="chapter 7 sinusoidal steady analysis 정현파 정상 상태 분석 오일러 페이저 복소수 임피던스 어드미턴스 주파수 도메인">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 07</span></div>
+              <h3 class="card-title">Chapter 7. 정현파 정상 상태</h3>
+              <p class="card-desc">오일러 공식 기반 시간 도메인 전압/전류의 복소 페이저(Phasor) 변환, RLC의 임피던스 대수 공식 치환 및 AC 정상상태 회로 해석.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter7%20Sinusoidal%20Steady%20Analysis.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+
+          <div class="card" data-title="chapter 8 steady-state power analysis 교류 전력 평균 전력 무효 전력 피상 복소 전력 역률 보정 역률 개선">
+            <div class="card-content">
+              <div class="card-meta"><span class="chapter-badge">Chapter 08</span></div>
+              <h3 class="card-title">Chapter 8. 교류 Steady-State 전력</h3>
+              <p class="card-desc">순시 및 실효치(RMS) 전압과 평균(Real), 무효(Reactive), 복소(Complex) 전력 및 교류 송전 효율 향상을 위한 역률(Power Factor) 보정 기술.</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-btn" href="./Chapter8%20Steady-State%20Power%20Analysis.pdf" download>
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                PDF 다운로드
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB 2: Course Info -->
+    <div id="info" class="tab-panel">
+      <div class="info-grid">
+        <!-- Professor Card -->
+        <div class="profile-card">
+          <div class="avatar-wrapper">KHU</div>
+          <h2 class="prof-name">김동한 교수</h2>
+          <p class="prof-title">경희대학교 전자공학과</p>
+          
+          <ul class="prof-info-list">
+            <li>
+              <i data-lucide="map-pin" style="width: 18px; height: 18px;"></i>
+              전자정보대학 609호
+            </li>
+            <li>
+              <i data-lucide="phone" style="width: 18px; height: 18px;"></i>
+              내선번호: 3831
+            </li>
+            <li>
+              <i data-lucide="mail" style="width: 18px; height: 18px;"></i>
+              donghani@khu.ac.kr
+            </li>
+            <li>
+              <i data-lucide="clock" style="width: 18px; height: 18px;"></i>
+              상담시간: 매주 수업 후 1시간
+            </li>
+          </ul>
+        </div>
+
+        <!-- Course Details -->
+        <div class="details-card">
+          <div class="detail-item">
+            <h3><i data-lucide="book"></i>교과 주교재</h3>
+            <p><strong>회로이론 12판 (Engineering Circuit Analysis, 12th Edition)</strong></p>
+            <p style="font-size: 0.85rem; margin-top: 5px;">저자: J. David Irwin, R. Mark Nelms</p>
+            <div class="textbook-box">
+              <div class="textbook-img-wrapper">
+                <img src="textbook_cover.jpg" alt="Textbook Cover" class="textbook-img">
+              </div>
+              <div style="font-size: 0.9rem;">전기전자 회로망 설계 및 신호 해석의 기초 체력을 견고하게 길러주는 대학교재의 표준 바이블 서적입니다.</div>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <h3><i data-lucide="video"></i>온라인 강의 채널</h3>
+            <p>수업 내용의 복습을 돕기 위해 매 주차 강의 녹화본을 Youtube에 업로드하고 있습니다.</p>
+            <div class="youtube-banner">
+              <div class="youtube-banner-header">
+                <div class="youtube-icon"><i data-lucide="play" style="width: 20px; height: 20px;"></i></div>
+                <div class="yt-title">YouTube 채널 (경희대 김동한)</div>
+              </div>
+              <a href="https://www.youtube.com/channel/UCT_h-5YhlC0t9LEdVckdrXQ" class="yt-link" target="_blank">
+                동영상 시청하러 가기
+                <i data-lucide="external-link" style="width: 16px; height: 16px;"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2026 Kyung Hee University Department of Electronic Engineering. All rights reserved.</p>
+      <p style="margin-top: 5px; font-size: 0.8rem; opacity: 0.7;">본 자료는 김동한 교수님의 회로이론 수업 전용으로 제공되며, 소스 코드는 <a href="https://github.com/donghani/class-circuit-theory" target="_blank">GitHub</a>에서 확인할 수 있습니다.</p>
+    </footer>
+  </div>
+
+  <script>
+    // Lucide Icons Initialization
+    lucide.createIcons();
+
+    // Tab Switch Logic
+    function switchTab(tabId) {
+      // Deactivate all tabs
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+
+      // Activate selected tab
+      const selectedBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => 
+        btn.getAttribute('onclick').includes(tabId)
+      );
+      if (selectedBtn) selectedBtn.classList.add('active');
+
+      const selectedPanel = document.getElementById(tabId);
+      if (selectedPanel) selectedPanel.classList.add('active');
+    }
+
+    // Interactive Search Logic for Lectures
+    function filterLectures() {
+      const searchInput = document.getElementById('lectureSearch').value.toLowerCase();
+      const cards = document.querySelectorAll('.card');
+      
+      cards.forEach(card => {
+        const titleData = card.getAttribute('data-title').toLowerCase();
+        const cardTitleText = card.querySelector('.card-title').innerText.toLowerCase();
+        const cardDescText = card.querySelector('.card-desc').innerText.toLowerCase();
+        
+        if (titleData.includes(searchInput) || cardTitleText.includes(searchInput) || cardDescText.includes(searchInput)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
 </html>
